@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.xbw.common.security.Principal;
 
-//@Controller
+@Controller
 public class ShiroLoginController {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
