@@ -11,11 +11,13 @@
 	<!-- <mvc:annotation-driven /> -->
 
 	<!-- 默认的注解映射的支持，org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping -->
+	<!-- <mvc:annotation-driven> -->
 	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
 		<mvc:message-converters register-defaults="true">
 			<!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
 				<constructor-arg value="UTF-8" />
+				<property name="writeAcceptCharset" value="false" />
 			</bean>
 			<!-- 将Jackson2HttpMessageConverter的默认格式化输出设为true -->
 			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
@@ -23,6 +25,11 @@
 				<property name="supportedMediaTypes">
 					<list>
 						<value>text/html;charset=UTF-8</value>
+						<!-- 设置请求body支持的类型 -->
+						<value>application/x-www-form-urlencoded</value>
+						<value>application/atom+xml;charset=UTF-8</value>
+						<value>application/json;charset=UTF-8</value>
+						<value>application/xml;charset=UTF-8</value>
 					</list>
 				</property>
 				<property name="objectMapper">
@@ -41,17 +48,30 @@
 
 	<!-- 内容协商-同一资源的多种表现 -->
 	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<!-- 扩展名至mimeType的映射,即 /***.json => application/json -->
 		<property name="favorPathExtension" value="true" />
+		<!-- 用于开启 /***?format=json 的支持 -->
 		<property name="favorParameter" value="true" />
+		<property name="parameterName" value="format" />
+		<!-- 是否忽略Accept Header -->
 		<property name="ignoreAcceptHeader" value="true" />
+		<!-- 默认的content type ,在没有扩展名和参数时即/***/*** 时的默认展现形式 -->
 		<property name="defaultContentType" value="text/html" />
+		<!--扩展名到MIME的映射；favorPathExtension, favorParameter是true时起作用 -->
 		<property name="mediaTypes">
 			<map>
+				<entry key="atom" value="application/atom+xml" />
 				<entry key="json" value="application/json" />
 				<entry key="xml" value="application/xml" />
-				<entry key="xls" value="application/vnd.ms-excel" />
 			</map>
 		</property>
+		<!-- <property name="mediaTypes">
+			<value>
+				json=application/json
+				xml=application/xml
+				html=text/html
+			</value>
+		</property> -->
 	</bean>
 
 	<!-- 使用Annotation自动注册Bean,只扫描@Controller -->
