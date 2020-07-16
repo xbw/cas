@@ -22,6 +22,12 @@
 	<artifactId>cas-server</artifactId>
 	<packaging>war</packaging>
 	<name>Jasig CAS Web Application</name>
+	
+	<properties>
+		<java.version>1.7</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
 	<dependencies>
 
 		<dependency>
@@ -186,10 +192,19 @@
 	<build>
 		<plugins>
 			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source><!-- 源代码使用的开发版本 -->
+					<target>${java.version}</target><!-- 需要生成的目标class文件的编译版本 -->
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<warName>cas</warName>
+					<!-- <warName>${project.artifactId}-${project.version}</warName> -->
+					<warName>${project.artifactId}</warName>
 					<webResources>
 						<resource>
 							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
@@ -216,8 +231,9 @@
 					</execution>
 				</executions>
 				<configuration>
-					<messagesDirectory>${basedir}/src/main/webapp/WEB-INF/classes/</messagesDirectory>
-					<mainMessagesFile>messages_en.properties</mainMessagesFile>
+					<!-- <messagesDirectory>${basedir}/src/main/webapp/WEB-INF/classes/</messagesDirectory> -->
+					<messagesDirectory>${basedir}/src/main/resources/</messagesDirectory>
+					<mainMessagesFile>messages_zh_CN.properties</mainMessagesFile>
 				</configuration>
 			</plugin>
 		</plugins>
